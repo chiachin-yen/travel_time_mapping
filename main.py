@@ -3,6 +3,7 @@ Main script of traveling time
 """
 
 import configparser
+import datetime
 import json
 import os
 import urllib.request
@@ -35,6 +36,11 @@ def gen_grid(cen_X, cen_Y, step, count_X, count_Y):
     x = y = 0
     dx = 0
     dy = -1
+    count_X = int(count_X)
+    count_Y = int(count_Y)
+    step = float(step)
+    cen_X = float(cen_X)
+    cen_Y = float(cen_Y)
     for i in range(max(count_X, count_Y)**2):
         if (-count_X/2 < x <= count_X/2) and (-count_Y/2 < y <= count_Y/2):
             yield [cen_X + x * step, cen_Y + y * step]
@@ -47,7 +53,7 @@ def access_API(origin, dest):
     """Acess API and return json."""
     url = API_url.format(origin[0], origin[1], dest[0], dest[1], KEY)
     result = urllib.request.urlopen(url)
-    return result.read()
+    return result
 
 
 def remap_features():
@@ -55,12 +61,21 @@ def remap_features():
     pass
 
 
-def mapping(origin, grid_size, grid_x, grid_y):
+def mapping():
     """Mapping."""
-    pass
-
-
-origin = [24.127682, 121.173583]
-dest = [24.151994, 121.194043]
-
-print(access_API(origin, dest))
+    origin = [input("Origin Lat: "),
+              input("Origin Long: ")
+              ]
+    grid_size = input("Grid size(degree): ")
+    grid_x = input("Grid size x: ")
+    grid_y = input("Grid size y: ")
+    task_name = input("Task name: ")
+    if task_name == '':
+        task_name = datetime.datetime.now().strftime('%y-%m-%dT%H-%M-%S')
+    os.makedirs(task_name)
+    for i, pt in enumerate(
+        gen_grid(origin[1], origin[0], grid_size, grid_x, grid_y)
+    ):
+        with open(os.path.join(task_name, str(i)+'.json'), 'w') as temp_file:
+            result = json.load(access_API(origin, list(reversed(pt))))
+            json.dump(result, temp_file)
