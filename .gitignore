@@ -109,3 +109,4 @@ venv.bak/
 # Custom Content
 setting.ini
 dev/
+result/

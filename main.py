@@ -6,6 +6,7 @@ import configparser
 import datetime
 import json
 import os
+import time
 import urllib.request
 
 # API URL
@@ -72,10 +73,21 @@ def mapping():
     task_name = input("Task name: ")
     if task_name == '':
         task_name = datetime.datetime.now().strftime('%y-%m-%dT%H-%M-%S')
-    os.makedirs(task_name)
+    os.makedirs(os.path.join('result', task_name))
+
     for i, pt in enumerate(
         gen_grid(origin[1], origin[0], grid_size, grid_x, grid_y)
     ):
-        with open(os.path.join(task_name, str(i)+'.json'), 'w') as temp_file:
+        print('Mapping point {}, [{},{}]'.format(i, origin[1], origin[0]))
+        with open(
+            os.path.join('result', task_name, str(i)+'.json'), 'w'
+        ) as temp_file:
             result = json.load(access_API(origin, list(reversed(pt))))
             json.dump(result, temp_file)
+        time.sleep(1)
+
+
+if __name__ == "__main__":
+    mode = input('Mapping via API(1) or Remap results?')
+    if mode == '1':
+        mapping()
