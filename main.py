@@ -78,7 +78,7 @@ def mapping():
     for i, pt in enumerate(
         gen_grid(origin[1], origin[0], grid_size, grid_x, grid_y)
     ):
-        print('Mapping point {}, [{},{}]'.format(i, origin[1], origin[0]))
+        print('Mapping point {}, [{},{}]'.format(i, pt[1], pt[0]))
         with open(
             os.path.join('result', task_name, str(i)+'.json'), 'w'
         ) as temp_file:
