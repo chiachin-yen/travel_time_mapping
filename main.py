@@ -84,7 +84,7 @@ def mapping():
         ) as temp_file:
             result = json.load(access_API(origin, list(reversed(pt))))
             json.dump(result, temp_file)
-        time.sleep(1)
+        time.sleep(0.05)
 
 
 if __name__ == "__main__":
