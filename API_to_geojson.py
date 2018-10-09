@@ -90,7 +90,6 @@ gj_result = {
         }
     },
     'features': features
-
 }
 
 with open(os.path.join('result', 're.geojson'), 'w') as file_path:
