@@ -3,6 +3,7 @@ Main script of traveling time
 """
 
 import configparser
+import csv
 import datetime
 import json
 import os
@@ -87,7 +88,32 @@ def mapping():
         time.sleep(0.05)
 
 
+def mapping_from_file():
+    """Mapping from file."""
+    origin = [input("Origin Lat: "),
+              input("Origin Long: ")
+              ]
+    task_name = input("Task name: ")
+    if task_name == '':
+        task_name = datetime.datetime.now().strftime('%y-%m-%dT%H-%M-%S')
+    os.makedirs(os.path.join('result', task_name))
+
+    with open('points.csv', 'r', newline='') as pts_file:
+        pts_reader = csv.DictReader(pts_file)
+        for i, pt in enumerate(pts_reader):
+            print('Mapping point {}, [{},{}]'.format(i, pt['X'], pt['Y']))
+            with open(
+                os.path.join('result', task_name, str(i)+'.json'), 'w'
+            ) as temp_file:
+                result = json.load(access_API(origin, [pt['Y'], pt['X']]))
+                json.dump(result, temp_file)
+            time.sleep(0.05)
+
+
 if __name__ == "__main__":
     mode = input('Mapping via API(1) or Remap results?')
     if mode == '1':
         mapping()
+    elif mode == '2':
+        print('mapping from file')
+        mapping_from_file()
